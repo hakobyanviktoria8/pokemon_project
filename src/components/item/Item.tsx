@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import "./Item.css";
 
 interface ComponentProps {
-    item: any;
+    name: string;
+    url: any;
 } 
 
 interface CopmPropsData {
@@ -31,24 +32,24 @@ interface CopmPropsData {
     };
 }
 
-function Item({item}: ComponentProps) {
+function Item({name, url}: ComponentProps) {
     const [fillData, setFillData] = useState<CopmPropsData>()
     const [loading, setLoading] = useState(false)
 
 
     useEffect(()=>{
-        fetch(item?.url)
+        fetch(url)
         .then(res => res.json())
         .then(data => {
             setFillData(data)
             setLoading(true)
         })
         .catch(err => console.log(err))
-      },[])
+    },[name])
       
   return (
     <div className='item'>
-        <h2>{item.name}</h2>
+        <h2>{name}</h2>
         <img src={fillData?.sprites.front_default}/>
         {!loading ? 
         <h4>Loading...</h4>

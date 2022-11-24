@@ -17,3 +17,17 @@
   flex-wrap: wrap;
   justify-content: center;
 }
+
+.pagination{
+  margin: 20px auto;
+}
+
+.pagination > span{
+  font-size: 20px;
+  margin: 10px;
+}
+
+.pagination > button {
+  width: 80px;
+  height: 25px;
+}

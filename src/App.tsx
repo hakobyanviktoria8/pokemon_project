@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import Item from './components/item/Item';
-import Pagination from './components/Pagination';
 
 interface CompProps {
   name: string;
+  url: any;
 }
 
 function App() {
@@ -12,21 +12,21 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [searchValue, setSearchValue] = useState('');
   const[searchData, setSearchData] = useState<CompProps[]>([]);
+  const [page, setPage] = useState(0)
 
   useEffect(()=>{
-    fetch("https://pokeapi.co/api/v2/pokemon?limit=10&offset=0")
+    fetch(`https://pokeapi.co/api/v2/pokemon?limit=16&offset=${page}`)
     .then(res => res.json())
     .then(data => {
       setData(data.results)
       setLoading(true)
     })
     .catch(err => console.log(err))
-  },[])
+  }, [page])
 
   const handleChange = (e: any) => {
     setSearchValue(e.target.value)
   }
-
   
   useEffect(() => {
     if(searchValue.length > 3) {
@@ -34,6 +34,12 @@ function App() {
     }
   }, [searchValue])
   
+  const handleChangePage = (num: number) => {
+    if(page >= 0) {
+      setPage(prev=> prev + num)
+    } 
+  } 
+
   return (
     <div className="App">
       <h1>List All Pokemons</h1>
@@ -51,12 +57,16 @@ function App() {
       <div className='itemWrapper'>
         {
           (searchValue.length > 3 ? searchData : data)?.map((item, idx) => 
-            <Item item={item} key={idx}/>
+            <Item name={item.name} url={item.url} key={idx}/>
           )
         }
       </div>
 
-      <Pagination />
+      <div className='pagination'>
+        <button disabled={page===0} onClick={()=>handleChangePage(-1)}>prev</button>
+        <span>{page}</span>
+        <button disabled={data.length < 16} onClick={()=>handleChangePage(1)}>next</button>
+      </div>
     </div>
   );
 }

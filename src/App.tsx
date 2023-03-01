@@ -10,15 +10,15 @@ interface CompProps {
 function App() {
   const [data, setData] = useState<CompProps[]>([])
   const [loading, setLoading] = useState(false)
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState<string>('');
   const[searchData, setSearchData] = useState<CompProps[]>([]);
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState<number>(0)
 
   useEffect(()=>{
     fetch(`https://pokeapi.co/api/v2/pokemon?limit=16&offset=${page}`)
     .then(res => res.json())
-    .then(data => {
-      setData(data.results)
+    .then(resData => {
+      setData(resData.results)
       setLoading(true)
     })
     .catch(err => console.log(err))
@@ -29,7 +29,7 @@ function App() {
   }
   
   useEffect(() => {
-    if(searchValue.length > 3) {
+    if(searchValue.length > 0) {
       setSearchData(data.filter(x=> x.name.includes(searchValue)))
     }
   }, [searchValue])
@@ -56,7 +56,7 @@ function App() {
 
       <div className='itemWrapper'>
         {
-          (searchValue.length > 3 ? searchData : data)?.map((item, idx) => 
+          (searchValue.length > 1 ? searchData : data)?.map((item, idx) => 
             <Item name={item.name} url={item.url} key={idx}/>
           )
         }
